@@ -7,5 +7,9 @@ wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
 sudo apt update
 
-read -p "Enter JDK version to install (17, 21...): " version
+version="$JAVA_VERSION"
+if [ -z "$version" ]; then
+	version="17"
+fi
+
 sudo apt install "termurin-${version}-jdk"

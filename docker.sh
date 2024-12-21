@@ -21,14 +21,12 @@ sudo usermod -aG docker "$me"
 
 # conf daemon docker
 
-echo 'Configure docker daemon to use 10.10.0.0/16 subnet? [Y=Return/N=Ctrl-C]'
-read
+if [ ! -z "$DOCKER_SUBNET_10" ]; then
+	if [ ! -d /etc/docker ]; then
+		sudo mkdir /etc/docker
+	fi
 
-if [ ! -d /etc/docker ]; then
-	sudo mkdir /etc/docker
-fi
-
-sudo cat << 'EOF' > /etc/docker/daemon.json
+	sudo cat << 'EOF' > /etc/docker/daemon.json
 {
         "bip":"10.10.0.1/24",
         "default-address-pools": [
@@ -37,6 +35,7 @@ sudo cat << 'EOF' > /etc/docker/daemon.json
 }
 EOF
 
-sudo systemctl restart docker
+	sudo systemctl restart docker
+fi
 
 echo 'Docker installed. Log-out and log back in to refresh your groups.'
